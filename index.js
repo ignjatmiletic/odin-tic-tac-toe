@@ -25,9 +25,18 @@ function GameBoard()
 
        board[row][column].addToken(player);
     }
+
+    const logBoard = () => {
+    const boardWithCellValues = board.map((row) =>
+      row.map((cell) => cell.getValue())
+    );
+    console.log(boardWithCellValues);
+    };
+
     return{
         placeSign,
-        getBoard
+        getBoard,
+        logBoard
     }
 }
 
@@ -37,9 +46,71 @@ function Cell()
 
     const getValue = () => value
 
+    const addToken = (player) =>
+    {
+        value = player
+    }
+
     return {
-    getValue
+    getValue,
+    addToken
   };
+}
+
+function gameController(
+    playerOne = "X",
+    playerTwo = "O")
+{
+    const gameBoard = GameBoard()
+
+    const players = 
+    [
+        {
+            name: playerOne,
+            sign: 1
+        },
+        {
+            name: playerTwo,
+            sign: -1
+        }
+    ]
+
+    let activePlayer = players[0]
+    
+    const switchActivePlayer = () =>
+    {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0]
+    }
+
+    const getActivePlayer = () => activePlayer
+
+    const logNewRound = () =>
+    {
+        board.logBoard();
+        console.log(`${getActivePlayer().name}'s turn.`);
+    }
+
+    const playRound = (column, row) =>
+    {
+        board.placeSign(column, row, getActivePlayer().token);
+        switchActivePlayer();
+        logNewRound();
+    }
+    logNewRound();
+    
+    return {
+    playRound,
+    getActivePlayer,
+    getBoard: board.getBoard,
+    };
+}
+
+function screenControler()
+{
+    turn = document.querySelector('.turn')
+    board = document.querySelector('.board')
+
+    
 }
 
 
